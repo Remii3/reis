@@ -39,7 +39,6 @@ export function constructMetadata({
     },
     icons,
     metadataBase: new URL("https://reis-gamma.vercel.app"),
-    themeColor: "#FFF",
     ...(noIndex && {
       robots: {
         index: false,
