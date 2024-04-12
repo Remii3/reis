@@ -6,13 +6,17 @@ import SimpleBar from "simplebar-react";
 import { Document, Page } from "react-pdf";
 import { useToast } from "./ui/use-toast";
 import { useResizeDetector } from "react-resize-detector";
-type PropsTypes = {
+
+interface PdfFullscreenProps {
   fileUrl: string;
-};
-function Pdffullscreen({ fileUrl }: PropsTypes) {
-  const { toast } = useToast();
-  const [numPages, setNumPages] = useState<number>();
+}
+
+const PdfFullscreen = ({ fileUrl }: PdfFullscreenProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [numPages, setNumPages] = useState<number>();
+
+  const { toast } = useToast();
+
   const { width, ref } = useResizeDetector();
 
   return (
@@ -24,12 +28,8 @@ function Pdffullscreen({ fileUrl }: PropsTypes) {
         }
       }}
     >
-      <DialogTrigger asChild>
-        <Button
-          onClick={() => setIsOpen(true)}
-          variant={"ghost"}
-          aria-label="fullscreen"
-        >
+      <DialogTrigger onClick={() => setIsOpen(true)} asChild>
+        <Button variant="ghost" className="gap-1.5" aria-label="fullscreen">
           <Expand className="h-4 w-4" />
         </Button>
       </DialogTrigger>
@@ -42,17 +42,14 @@ function Pdffullscreen({ fileUrl }: PropsTypes) {
                   <Loader2 className="my-24 h-6 w-6 animate-spin" />
                 </div>
               }
-              onLoadError={() =>
+              onLoadError={() => {
                 toast({
                   title: "Error loading PDF",
-                  description:
-                    "An error occurred while loading the PDF. Please try again later.",
+                  description: "Please try again later",
                   variant: "destructive",
-                })
-              }
-              onLoadSuccess={({ numPages }) => {
-                setNumPages(numPages);
+                });
               }}
+              onLoadSuccess={({ numPages }) => setNumPages(numPages)}
               file={fileUrl}
               className="max-h-full"
             >
@@ -65,6 +62,6 @@ function Pdffullscreen({ fileUrl }: PropsTypes) {
       </DialogContent>
     </Dialog>
   );
-}
+};
 
-export default Pdffullscreen;
+export default PdfFullscreen;
